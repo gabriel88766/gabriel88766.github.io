@@ -60,6 +60,7 @@ button:hover {
 #main {
   flex: 1;
   display: flex;
+  flex-direction: column; 
   justify-content: center;
   align-items: center;
   gap: 20px;
@@ -131,4 +132,9 @@ canvas {
   border-radius: 50%;
   font-size: 18px;
   padding: 0;
+}
+
+#intro, #about {
+  max-width: 700px;
+  text-align: center;
 }
