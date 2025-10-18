@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NES Emulddator</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <!-- Top bar -->
+  <div id="top-bar">
+    <button id="load-btn">Load ROM</button>
+    <input type="file" id="file-input" style="display:none">
+    <button onclick=show_controllers()>Controllers</button>
+    <button onclick=show_about()>About</button>
+  </div>
+
+  <!-- Main area -->
+   <div id="canvas-wrapper">
+    <canvas id="canvas" width="512" height="480"></canvas>
+    <button id="fullscreen-btn" title="Fullscreen">⛶</button>
+  </div>
+  <div id="right-pane"></div>
+  <!-- Below body icons -->
+  <div id="bottom-icons">
+    <a href=https://gabriel88766.github.io><button title="Home">🏠</button></a>
+    <button title="Info" onclick=show_help()>ℹ️</button>
+  </div>
+
+  <script>
+    var Module = {
+    canvas: (() => {
+      // create the canvas and append it to your div
+      var canvas = document.getElementById("canvas");
+      canvas.id = "canvas";
+      //canvas.width = 512;   // must match SDL_CreateWindow width
+      //canvas.height = 480;  // must match SDL_CreateWindow height
+      return canvas;
+    })(),
+      onRuntimeInitialized: function() {
+          const loadBtn = document.getElementById("load-btn");
+          const fileInput = document.getElementById("file-input");
+          loadBtn.addEventListener('click', () => {
+              fileInput.click();// open file dialog when button is clicked
+          });
+          fileInput.addEventListener('change', (event) => {
+              const file = event.target.files[0];
+              if (!file) return;
+
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                  const data = new Uint8Array(e.target.result);
+                  FS.writeFile("/file.nes", data); // write to Emscripten FS
+                  Module.ccall('load_cartridge', null, [], []);
+              };
+              reader.readAsArrayBuffer(file);
+          });
+          canvas.title = "NES Emulator";
+      }
+    };
+    // Fullscreen logic
+    document.getElementById('fullscreen-btn').onclick = () => {
+      if (!document.fullscreenElement) {
+        canvas.requestFullscreen().catch(console.error);
+      } else {
+        document.exitFullscreen();
+      }
+    };
+    function erase_pane() {
+      const pane = document.getElementById("right-pane");
+      pane.classList.remove("visible");
+      setTimeout(() => (pane.innerHTML = ""), 500); // wait for fade-out
+    }
+
+    function show_pane(html) {
+      const pane = document.getElementById("right-pane");
+      pane.innerHTML = html;
+      pane.classList.add("visible");
+
+      // Auto-hide after 30 seconds
+      clearTimeout(pane.hideTimer);
+      pane.hideTimer = setTimeout(() => erase_pane(), 30000);
+    }
+
+    //about show;
+    function show_about(){
+      show_pane("<div"+
+      "style='line-height: 1.4; padding: 10px;'>"+
+      "This is a <b>NES</b> Emulator, NES(Nintendo Entertainment System) is a console "+ 
+      "released in <b>1983</b>. This console introduced many famous franchises, like <b>Super "+
+      "Mario Bros, Legend of Zelda, Megaman</b> and so on...<br>"+
+      "This emulator was built for educative purposes as my first emulator project.<br> "+
+      "It's not, and it's not intended to be, among the best NES emulators. But I will "+
+      "keep improving it to make it as good as possible<br>"+
+      "I hope you enjoy the gameplay, check the main repo and rebuild "+
+      "it yourself! (It's fun!!!) <a target=\"_blank\" href = \"https://github.com/gabriel88766/NESEmulator\">"+
+      "https://github.com/gabriel88766/NESEmulator</a> </div>");
+    }
+    //help show
+    function show_help(){
+      show_pane("<div style='line-height: 1.4; padding: 10px;'>" +
+      "Click <b>Load ROM</b> and choose your <b>iNES ROM</b> to play the game.<br>" +
+      "It doesn’t support all games yet, so some may not load properly.<br><br>" +
+      "The <b>iNES format</b> means the header starts with the magic number <code>NES\\x1A</code>, " +
+      "followed by 12 bytes of information about the PRG/CHR size, mapper, and other data." +
+      "</div>");
+    }
+    //Controllers show
+    function show_controllers(){
+      show_pane("<div style='line-height: 1.4; padding: 10px;'>" +
+      "This emulator don't support 2 players and remap controllers yet (TODO)<br><br>"+
+      "Up = Arrow up<br>"+
+      "Down = Arrow down<br>"+
+      "Right = Arrow right<br>"+
+      "Left = Arrow left<br>"+
+      "Select = Right shift<br>"+
+      "Start = Return(Enter)<br>"+
+      "B = Z<br>"+
+      "A = X<br>"+
+      "</div>");
+    }
+
+  </script>
+  <script src="emunes.js"></script>
+</body>
+</html>
