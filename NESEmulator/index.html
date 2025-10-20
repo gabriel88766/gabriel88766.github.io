@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NES Emulddator</title>
+  <title>NES Emulator</title>
   <link rel="stylesheet" href="../styles.css" />
 </head>
 <body>
@@ -17,10 +17,14 @@
 
   <!-- Main area -->
    <div id="canvas-wrapper">
-    <canvas id="canvas" width="512" height="480"></canvas>
-    <button id="fullscreen-btn" title="Fullscreen">⛶</button>
+    <div id="left_pane"></div>
+    <div id="canvas_container">
+      <canvas id="canvas" width="512" height="480"></canvas>
+      <button id="fullscreen-btn" title="Fullscreen">⛶</button>
+    </div>
+    <div id="right-pane"></div>
   </div>
-  <div id="right-pane"></div>
+
   <!-- Below body icons -->
   <div id="bottom-icons">
     <a href=https://gabriel88766.github.io><button title="Home">🏠</button></a>
@@ -102,7 +106,8 @@
       "Click <b>Load ROM</b> and choose your <b>iNES ROM</b> to play the game.<br>" +
       "It doesn’t support all games yet, so some may not load properly.<br><br>" +
       "The <b>iNES format</b> means the header starts with the magic number <code>NES\\x1A</code>, " +
-      "followed by 12 bytes of information about the PRG/CHR size, mapper, and other data." +
+      "followed by 12 bytes of information about the PRG/CHR size, mapper, and other data.<br>" +
+      "You need to either dump your ROMs or get them elsewhere. (There are some free homebrew games, and there may also be some official public-domain ROMs available.)"+
       "</div>");
     }
     //Controllers show
