@@ -20,7 +20,7 @@
     <div id="left_pane"></div>
     <div id="canvas_container">
       <canvas id="canvas" width="512" height="480"></canvas>
-      <button id="fullscreen-btn" title="Fullscreen">⛶</button>
+      <!-- <button id="fullscreen-btn" title="Fullscreen">⛶</button> Fullscreen broken-->
     </div>
     <div id="right-pane"></div>
   </div>
@@ -37,8 +37,8 @@
       // create the canvas and append it to your div
       var canvas = document.getElementById("canvas");
       canvas.id = "canvas";
-      //canvas.width = 512;   // must match SDL_CreateWindow width
-      //canvas.height = 480;  // must match SDL_CreateWindow height
+      canvas.width = 512;   // must match SDL_CreateWindow width
+      canvas.height = 480;  // must match SDL_CreateWindow height
       return canvas;
     })(),
       onRuntimeInitialized: function() {
